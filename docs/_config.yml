@@ -1,0 +1,14 @@
+# Permalinks
+#
+# Use of `relative_permalinks` ensures post links from the index work properly.
+permalink:           pretty
+
+
+# Setup
+title:       Beesbridge
+name:        Beesbridge
+tagline:     We build bridges for business
+description: 'Beesbridge'
+baseurl:     ''
+markdown:    kramdown
+highlighter: rouge
