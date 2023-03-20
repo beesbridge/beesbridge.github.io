@@ -6,17 +6,17 @@ by  [Nav Alam](https://www.linkedin.com/in/navdeepalam/), [Mohit Sauhta](https:/
 This is collaborative work from Abacus Insights and Beesbridge, the delivery partner for Databricks.
 ```
 
-Data quality (DQ) is a critical component of any data-driven organization and one of the pillars for effective Data Governance. In traditional settings, the data quality captured the following dimensions about the data: Accuracy, Completeness, Consistency, and Timeliness. Abacus Insights, as a Data Platform provider that push the bounds of legacy data management platform,  needs to deal with the realities of integrating data silos, where eventual consistency is guaranteed, but may not be available in real-time. We introduce a concept of [**Data Grading**](#data-grading) where the data carries along with the data quality score. The natural corollary about that score is to have [**Process Transparency**](#process-transparency) allowing our customers to interpret the results. This blog post will walk you through the high-level details of how we have implemented these concepts using Spark engine, and Delta Lake on the Databricks platform.
+Data quality (DQ) is a critical component of any data-driven organization and one of the pillars for effective Data Governance. In traditional settings, the data quality captured the following dimensions about the data: Accuracy, Completeness, Consistency, and Timeliness. Abacus Insights, as a Data Platform provider that push the bounds of legacy data management platform,  needs to deal with the realities of integrating data silos, where eventual consistency is guaranteed, but may not be available in real-time. We introduce a concept of [**Data Grading**](#data-grading) where the data is augmented with a data quality score. The natural corollary of that score is to have [**Process Transparency**](#process-transparency) that allows our customers to interpret the results. This blog post will walk you through the high-level details of how we have implemented these concepts using Spark engine, and Delta Lake on the Databricks platform.
 
 Abacus Insights manages healthcare data by breaking down data silos to make a real impact for our customers. Our platform standardizes data across the healthcare ecosystem by providing a highly secure unified data infrastructure that minimizes change management and maximizes analytics enablement to reduce costs and improve outcomes. We provide a data platform that enables our customers to build a data-driven culture and drive better outcomes.
 
-Beesbridge is Databricks delivery partner specializing in building scalable and high performance data infrastructure.  We have built a team of solution architects and data engineers, who have helped many organizations unlock potential of their data on Databricks platform by building innovative solutions.
+Beesbridge is Databricks' delivery partner specializing in building scalable and high-performance data infrastructure.  We have built a team of solution architects and data engineers, who have helped many organizations unlock the potential of their data on Databricks platform by building innovative solutions.
 
 ## Process Transparency
-Data grading is the outcome of data quality rules that can be applied on the raw data from the source system in `Bronze` layer, as well as the data which is transformed and enriched in `Silver` layer. The section first explores the construction of data quality rule engine that enables end-user in the business to interpret the DQ rule and thereby promoting the process transparency. The section then explores how this engine is implemented using Spark and Delta Lake on the Databricks platform.
+Data grading is the outcome of data quality rules that can be applied on the raw data from the source system in `Bronze` layer, as well as the data which is transformed and enriched in `Silver` layer. The section first explores the construction of a data quality rule engine that enables the end-user in the business to interpret the DQ rule and thereby promotes the process transparency. The section then explores how this engine is implemented using Spark and Delta Lake on the Databricks platform.
 
 ### Data Quality Rule Engine
-First question that comes to mind is why a grammar is needed to represent data quality rule?  One can also build such rules in most of the popular data quality tools/libraries - after all, these tools provide rich visual interface and useful report outputs. However, these tools are not designed to work natively on the Databricks platform that support co-mingled workload: Batch and Streaming data.  In addition, these tools are not custom-built for delta lakehouse use cases. On one hand, the grammar enables the DataOps engineer to express the data quality rules in a simple and intuitive manner that can be interpreted by a non-technical user. On the other hand, it also allows the generation of efficient Spark code that can be run natively using Dataframe API along with the data engineering pipelines.
+The first question that comes to mind is why a grammar is needed to represent data quality rule?  One can also build such rules in most of the popular data quality tools/libraries - after all, these tools provide rich visual interface and useful report outputs. However, these tools are not designed to work natively on the Databricks platform that support co-mingled workload made up of Batch and Streaming pipelines.  In addition, these tools are not custom-built for delta lakehouse use cases. On one hand, the grammar enables the DataOps engineer to express the data quality rules in a simple and intuitive manner that can be interpreted by a non-technical user. On the other hand, it also allows the generation of efficient Spark code that can be run natively using Dataframe API along with the data engineering pipelines.
 
 The implementation of Data Quality Rule engine is constructed using the following components:
 1. [DQ Grammar](#dq-grammar) : Builds the domain specific language for data quality rules.
@@ -100,7 +100,7 @@ dq_check:
 ```
 
 #### DQ Rules
-Data Quality rules are defined on the basis of grammar defined above. The rules are grouped together for each entity, and each rule validates an attribute of that entity. 
+Data Quality rules are defined based on the grammar defined above. The rules are grouped together for each entity, and each rule validates an attribute of that entity. 
 
 To make the rules as succinct as possible, and yet intuitive for the business user to understand the intent of the rule, we use the following keywords in the rules:
 * `must` and `should` indicate the **mandatory** and **recommended** quality requirements.
@@ -174,7 +174,7 @@ def apply_dq_rules(dq_rules: str, df: DataFrame, spark: SparkSession = None) -> 
 
 The line `visitor.visit(tree)` in above code starts a tree traversal that will invoke the visit implementation of each node of the tree.
 
-Each row of DQ rule corresponds the following visit function call.
+Each row of DQ rule corresponds to the following visit function call.
 
 ```python
 def visitColumn_dq(self, ctx: NgDataQualityParser.Column_dqContext):  
@@ -229,7 +229,7 @@ def visitHuman_check(self, ctx: NgDataQualityParser.Human_checkContext):
 Data grading is the process of assigning a grade to each row of the dataframe based on the data quality check results.  In practice, the true data grade is dependent on the final analytical use case.  For instance, the data grade for a customer record can be based on the data quality of the customer name, address, and phone number.  On other hand, the data grade for a product record can be based on the data quality of the product name, description, and price.  Since the data grading subjective to the analytic use case,  it is important to retain the data quality results at the row level without filtering out any failed validations.
 
 ### Methodology to store the data quality results
-In first pass, each data quality check is performed for each row of the input dataframe.  The result of the data quality check is a new boolean column that is added to the dataframe.  The value of the new column is a boolean that indicates whether the data quality check passed or failed.  The data quality check can be either a `MUST` or `SHOULD` check.  The `MUST` check is a severe check and the `SHOULD` check is a warning check. The column name is constructed using the tested **severity type**, **column name**, and **data quality check type**.  For instance, the data quality check `Name should be human_name` will add a new column `dqw_Name_human_name` to the dataframe.  The value of the new column will be `True` if the data quality check passed and `False` if the data quality check failed. In similar fashion, the data quality check `BirthDate must be less than now` will add a new column `dqs_BirthDate_lt_now` to the dataframe. The value of the new column will be `True` if the data quality check passed and `False` if the data quality check failed.
+In the first pass, each data quality check is performed for each row of the input dataframe.  The result of the data quality check is a new boolean column that is added to the dataframe.  The value of the new column is a boolean that indicates whether the data quality check passed or failed.  The data quality check can be either a `MUST` or `SHOULD` check.  The `MUST` check is a severe check and the `SHOULD` check is a warning check. The column name is constructed using the tested **severity type**, **column name**, and **data quality check type**.  For instance, the data quality check `Name should be human_name` will add a new column `dqw_Name_human_name` to the dataframe.  The value of the new column will be `True` if the data quality check passed and `False` if the data quality check failed. In a similar fashion, the data quality check `BirthDate must be less than now` will add a new column `dqs_BirthDate_lt_now` to the dataframe. The value of the new column will be `True` if the data quality check passed and `False` if the data quality check failed.
 
 | Name       | BirthDate   | dqs_Name_human_name | dqw_BirthDate_lt_now |
 | -----------| ----------- | ------------------ |--------------------- |
@@ -238,14 +238,14 @@ In first pass, each data quality check is performed for each row of the input da
 | Gle9       | 2012-01-01  | False              | True                 |
 
 
-The above format of storing data is not optimal for following reasons:
+The above format of storing data is not optimal for the following reasons:
 1. The number of columns in the dataframe will increase linearly with the number of data quality checks.
 2. The column names are not easy to read and understand.
 3. Most of the checks will pass and the information ratio (about the failed tests) is very low.
 
-Furthermore, the `Audit-Balance-Control` framework in most Data Quality Management (DQM) tools may require total number of severe and warning failure counts. 
+Furthermore, the `Audit-Balance-Control` framework in most Data Quality Management (DQM) tools may require the total number of severe and warning failure counts. 
 
-Following code snippet converts the above dataframe into a more compact format that is easy to read and understand.
+The following code snippet converts the above dataframe into a more compact format that is easy to read and understand.
 
 ```python
 def flatten_dq_results(df_with_rules: DataFrame) -> DataFrame:
