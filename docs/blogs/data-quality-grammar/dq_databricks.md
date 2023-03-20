@@ -12,6 +12,7 @@ Abacus Insights manages healthcare data by breaking down data silos to make a re
 
 Beesbridge is Databricks' delivery partner specializing in building scalable and high-performance data infrastructure.  We have built a team of solution architects and data engineers, who have helped many organizations unlock the potential of their data on Databricks platform by building innovative solutions.
 
+
 ## Process Transparency
 Data grading is the outcome of data quality rules that can be applied on the raw data from the source system in `Bronze` layer, as well as the data which is transformed and enriched in `Silver` layer. The section first explores the construction of a data quality rule engine that enables the end-user in the business to interpret the DQ rule and thereby promotes the process transparency. The section then explores how this engine is implemented using Spark and Delta Lake on the Databricks platform.
 
@@ -177,7 +178,7 @@ The line `visitor.visit(tree)` in above code starts a tree traversal that will i
 Each row of DQ rule corresponds to the following visit function call.
 
 ```python
-def visitColumn_dq(self, ctx: NgDataQualityParser.Column_dqContext):  
+def visitColumn_dq(self, ctx: DataQualityParser.Column_dqContext):  
 	# Start a new DQ Builder
     self.currentDqBuilder = DqBuilder(self.df)  
     # Get the column being checked
@@ -212,7 +213,7 @@ def visitPast_check(self, ctx: DataQualityParser.Past_checkContext):
 Another DQ Rule from above:  `Name should be human_name`  will invoke the following DQ check `visit` method, that adds a new DF column with a regular expression check.
 
 ```python
-def visitHuman_check(self, ctx: NgDataQualityParser.Human_checkContext):  
+def visitHuman_check(self, ctx: DataQualityParser.Human_checkContext):  
     col = self.currentDqBuilder.source_column  
     self.currentDqBuilder.dq_type = "human_name"  
     self.currentDqBuilder.dq_spark_col = col.rlike(r"^(?:[A-Za-z\-\']+\s?)*$")
@@ -270,6 +271,7 @@ def flatten_dq_results(df_with_rules: DataFrame) -> DataFrame:
     return df_clean
 ```
 
+Once the data quality results are flattened as shown below, Abacus Data Platform use these metrics and grades to  further apply a business context grade on the data, while enrichening the data from `Silver` to `Gold` layer.
 
 **Final table with grade and data quality results**
 
