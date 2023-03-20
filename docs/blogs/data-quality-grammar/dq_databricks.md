@@ -10,13 +10,13 @@ Data quality (DQ) is a critical component of any data-driven organization and on
 
 Abacus Insights manages healthcare data by breaking down data silos to make a real impact for our customers. Our platform standardizes data across the healthcare ecosystem by providing a highly secure unified data infrastructure that minimizes change management and maximizes analytics enablement to reduce costs and improve outcomes. We provide a data platform that enables our customers to build a data-driven culture and drive better outcomes.
 
-Beesbridge is Databricks delivery partner specializing in building scalable, and high performance data infrastructure.  We have built a team of solution architects and data engineers, who have helped many organizations unlock potential of their data on Databricks platform by building innovative solutions.
+Beesbridge is Databricks delivery partner specializing in building scalable and high performance data infrastructure.  We have built a team of solution architects and data engineers, who have helped many organizations unlock potential of their data on Databricks platform by building innovative solutions.
 
 ## Process Transparency
 Data grading is the outcome of data quality rules that can be applied on the raw data from the source system in `Bronze` layer, as well as the data which is transformed and enriched in `Silver` layer. The section first explores the construction of data quality rule engine that enables end-user in the business to interpret the DQ rule and thereby promoting the process transparency. The section then explores how this engine is implemented using Spark and Delta Lake on the Databricks platform.
 
 ### Data Quality Rule Engine
-First question that comes to mind is why a grammar is needed to represent data quality rule?  One can also build such rules in most of the popular data quality tools/libraries - after all, these tools provide rich visual interface and useful report outputs. However, these tools are not designed to work natively on the Databricks platform that support co-mingled workload: Batch and Streaming data.  In addition, these tools are not custom-built for delta lakehouse use cases. On one hand, the grammar enables the DataOps engineer to express the data quality rules in a simple and intuitive manner that can be interpreted by a non-technical user. On tje other hand, it also allows the generation of efficient Spark code that can be run natively using Dataframe API along with the data engineering pipelines.
+First question that comes to mind is why a grammar is needed to represent data quality rule?  One can also build such rules in most of the popular data quality tools/libraries - after all, these tools provide rich visual interface and useful report outputs. However, these tools are not designed to work natively on the Databricks platform that support co-mingled workload: Batch and Streaming data.  In addition, these tools are not custom-built for delta lakehouse use cases. On one hand, the grammar enables the DataOps engineer to express the data quality rules in a simple and intuitive manner that can be interpreted by a non-technical user. On the other hand, it also allows the generation of efficient Spark code that can be run natively using Dataframe API along with the data engineering pipelines.
 
 The implementation of Data Quality Rule engine is constructed using the following components:
 1. [DQ Grammar](#dq-grammar) : Builds the domain specific language for data quality rules.
@@ -243,7 +243,7 @@ The above format of storing data is not optimal for following reasons:
 2. The column names are not easy to read and understand.
 3. Most of the checks will pass and the information ratio (about the failed tests) is very low.
 
-Further more, the `Audit-Balance-Control` framework in most Data Quality Management (DQM) tools may require total number of severe and warning failure counts. 
+Furthermore, the `Audit-Balance-Control` framework in most Data Quality Management (DQM) tools may require total number of severe and warning failure counts. 
 
 Following code snippet converts the above dataframe into a more compact format that is easy to read and understand.
 
