@@ -268,7 +268,7 @@ def flatten_dq_results(df_with_rules: DataFrame) -> DataFrame:
     return df_clean
 ```
 
-Once the data quality results are flattened as shown below, the data grade is showcased by the count of severe and warning occurances, indicating the degree of the issue discovered, while also showcasing the specific data quality issue discovered. Abacus Data Platform uses these metrics and grades to  further apply a business context grade on the data, while enrichening the data from the `Silver` to `Gold` layer.
+Once the data quality results are flattened as shown below, the data grade is showcased by the count of severe and warning occurances, indicating the degree of the issue, while also showcasing the specific data quality issue discovered. Abacus Data Platform uses these metrics and grades to  further apply a business context grade on the data, while enrichening the data from the `Silver` to `Gold` layer.
 
 **Final table with grade and data quality results**
 
