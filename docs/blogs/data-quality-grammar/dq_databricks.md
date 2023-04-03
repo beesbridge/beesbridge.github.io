@@ -1,6 +1,6 @@
 # Driving Data Usability for Health Plans through Simplified Data Quality Enforcement with Databricks
 
-by  [Navdeep Alam](https://www.linkedin.com/in/navdeepalam/), [Mohit Sauhta](https://www.linkedin.com/in/mohitsauhta/?lipi=urn%3Ali%3Apage%3Ad_flagship3_feed%3Bjtf%2BJ3jHT5e7zyeq9hpuqA%3D%3D)
+by  [Navdeep Alam](https://www.linkedin.com/in/navdeepalam/), [Mohit Sauhta](https://www.linkedin.com/in/mohitsauhta)
 
 ```
 This is collaborative work from Abacus Insights and Beesbridge, the delivery partner for Databricks.
