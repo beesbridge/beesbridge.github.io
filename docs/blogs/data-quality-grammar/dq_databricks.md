@@ -13,8 +13,19 @@ Abacus Insights, as a healthcare technology leader with the only data transforma
 ## Process Transparency
 Data grading is the outcome of data quality rules that can be applied on the raw data from the source system in `Bronze` layer, as well as the data which is transformed and enriched in `Silver` layer. The section first explores the construction of a data quality rule engine that enables the end-user in the business to interpret the DQ rule and thereby promotes the process transparency. The section then explores how this engine is implemented using Spark and Delta Lake on the Databricks platform.
 
+In addition, the data quality is continuously improved in Databricks' medallion architecture as the data is **curated** with help of the data quality rule engine , and then published as **trusted** asset to drive the downstream analytics and machine learning use cases.  The following diagram shows the high level flow of data quality in the medallion architecture.
+
+![Data Quality in Medallion Architecture](images/dq_medallion_flow.png)
+
 ### Data Quality Rule Engine
 The first question that comes to mind is why a grammar is needed to represent data quality rule?  One can also build such rules in most of the popular data quality tools/libraries - after all, these tools provide rich visual interface and useful report outputs. However, these tools are not designed to work natively on the Databricks platform that support co-mingled workload made up of Batch and Streaming pipelines.  In addition, these tools are not custom-built for delta lakehouse use cases. On one hand, the grammar enables the DataOps engineer to express the data quality rules in a simple and intuitive manner that can be interpreted by a non-technical user. On the other hand, it also allows the generation of efficient Spark code that can be run natively using Dataframe API along with the data engineering pipelines.
+
+#### Harnessing the power of ANTLR on Databricks Platform
+Databricks' platform is built on open standards like Spark and Delta that can be extended easily to support specialized use cases by using other custom libraries, framework, or methodologies. One of the more popular examples is how Databricks were able to bring the power of large language model (LLM) to the platform by releasing [Dolly 2.0](https://www.databricks.com/blog/2023/04/12/dolly-first-open-commercially-viable-instruction-tuned-llm).  Similarly, we have integrated a powerful parse generator, [ANTLR](https://www.antlr.org/) with Spark and Delta Lake to build and deploy an English-like grammar for a data quality rule engine.  In particular, the distributed compute and open framework of Spark enables the execution of the following end to end flow in a scalable manner.
+
+![DQ End to End Flow](images/dq_steps_flow.png)
+
+### Implementation Details
 
 The implementation of Data Quality Rule engine is constructed using the following components:
 1. [DQ Grammar](#dq-grammar) : Builds the domain specific language for data quality rules.
