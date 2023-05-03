@@ -1,4 +1,4 @@
-# Driving Data Usability for Health Plans through Simplified Data Quality Enforcement with Databricks
+# Increased Data Usability for Healthcare through Automated Data Quality on Databricks
 
 by  [Navdeep Alam](https://www.linkedin.com/in/navdeepalam/), [Mohit Sauhta](https://www.linkedin.com/in/mohitsauhta)
 
