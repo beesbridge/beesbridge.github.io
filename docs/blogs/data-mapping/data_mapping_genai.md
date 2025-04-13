@@ -8,6 +8,8 @@ This article guides you through automating source-to-target data mappings for Me
 ![Data Mapping](images/data_mapping.png)
 
 
+---
+
 ## ⚙️ Part 1: Prepare T-MSIS Data dictionary
 
 T-MSIS is a standardized data submission format used by Medicaid to streamline and ensure consistency across state-submitted data.  It defines file segments and data elements that covers comprehensive information about enrollment, claims, providers, and more. 
@@ -102,11 +104,13 @@ def assign_attributes(vector_store_store, file, domain_names, client=None):
     )
 ```
 
+---
+
 ## 🔍 Part 3: Query the vector store with LLM and retrieve mappings
 
 The RAG system employs the effective prompt strategy to retrieve accurate mappings between source (T-MSIS) and target data dictionary. Here is the high level workflow.
 
-**Workflow**
+
 
 ### Retrieve target domain to build basic prompt
 Based on user input, retrieve details from target dictionary and construct the query prompt that aligns with the structure saved in the vector store. The prompt should include the target table name, column name, and description. This will help the LLM understand the context of the query and generate accurate mappings.
