@@ -34,7 +34,7 @@ Example JSONL file for the file segment : [**CLAIM_HEADER_RECORD_IP**](https://w
 ...
 ```
 
-> 💡  The organization of data with each file is important for retrieval augmented generation (RAG) architecture. Firstly, the structure should assist LLM in generating a formatted response for the data mapping query. Second, the contextually similar data should be clustered so the semantic representation is clearly represented in form a vector - More on this in final section of this article.
+> 📖 The organization of data with each file is important for retrieval augmented generation (RAG) architecture. Firstly, the structure should assist LLM in generating a formatted response for the data mapping query. Second, the contextually similar data should be clustered so the semantic representation is clearly represented in form a vector - More on this in final section of this article.
 
 
 ---
@@ -44,7 +44,7 @@ Example JSONL file for the file segment : [**CLAIM_HEADER_RECORD_IP**](https://w
 
 The prepared JSON files are now ready for ingestion into OpenAI’s vector store. You can either reuse an existing store or create a new one. These files will be uploaded to the vector store, which will then generate and store embeddings for each data element—enabling efficient similarity search during retrieval.
 
-> Note: What role does **vector store** play in RAG - and fundamentally, what is RAG? For a concise overview, we recommend this article: [**Retrieval Augmented Generation (RAG) and Semantic Search for GPTs**](https://help.openai.com/en/articles/8868588-retrieval-augmented-generation-rag-and-semantic-search-for-gpts)
+> 📚 What role does **vector store** play in RAG - and fundamentally, what is RAG? For a concise overview, we recommend this article: [**Retrieval Augmented Generation (RAG) and Semantic Search for GPTs**](https://help.openai.com/en/articles/8868588-retrieval-augmented-generation-rag-and-semantic-search-for-gpts)
 
 
 Create a new vector store or reuse an existing one using the OpenAI API. The following code snippet demonstrates how to create/get a vector store.
@@ -72,7 +72,7 @@ def create_or_get_vector_store(name: str, client: OpenAI = None):
 ```
 
 
-> Open AI's API is well documented and easy to use. You can find the API documentation [here](https://platform.openai.com/docs/api-reference/introduction).  In above example, the API key should be first generated on Open AI's platform and stored in the environment variable `OPENAI_API_KEY`.
+> 📎 Open AI's API is well documented and easy to use. You can find the API documentation [here](https://platform.openai.com/docs/api-reference/introduction).  In above example, the API key should be first generated on Open AI's platform and stored in the environment variable `OPENAI_API_KEY`.
 
 
 Upload all the JSON files to the vector using using `file_batches.upload_and_poll` method. This method will load the files in batches and poll the status of the upload. The files will be processed in parallel, and the embeddings will be generated for each data element. 
