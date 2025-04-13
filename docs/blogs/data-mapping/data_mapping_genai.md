@@ -34,10 +34,11 @@ Example JSONL file for the file segment : [**CLAIM_HEADER_RECORD_IP**](https://w
 ...
 ```
 
-> Note: The organization of data with each file is important for retrieval augmented generation (RAG) architecture. First the structure itself should help LLM in building the formatted response for the data mapping query. Second, the contextually similar data should be clustered so the semantic representation is clearly representation in form a vector - More on this in final section of this article.
+> 💡  The organization of data with each file is important for retrieval augmented generation (RAG) architecture. Firstly, the structure should assist LLM in generating a formatted response for the data mapping query. Second, the contextually similar data should be clustered so the semantic representation is clearly represented in form a vector - More on this in final section of this article.
 
 
 ---
+
 
 ## 🧾 Part 2 : Create and Manage the Vector Store 
 
@@ -56,9 +57,9 @@ def create_or_get_vector_store(name: str, client: OpenAI = None):
     """
     Creates or retrieves a vector store with the given name using OpenAI's API.
     """
-    client = client or OpenAI(api_key=os.getenv("MEDICAID_OPENAI_API_KEY"))
+    client = client or OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     if not client.api_key:
-        raise ValueError("Set env var: MEDICAID_OPENAI_API_KEY")
+        raise ValueError("Set env var: OPENAI_API_KEY")
 
     for vs in client.vector_stores.list():
         if vs.name == name:
@@ -71,10 +72,11 @@ def create_or_get_vector_store(name: str, client: OpenAI = None):
 ```
 
 
-> Open AI's API is well documented and easy to use. You can find the API documentation [here](https://platform.openai.com/docs/api-reference/introduction).  In above example, the API key should be first generated on Open AI's platform and stored in the environment variable `MEDICAID_OPENAI_API_KEY`.
+> Open AI's API is well documented and easy to use. You can find the API documentation [here](https://platform.openai.com/docs/api-reference/introduction).  In above example, the API key should be first generated on Open AI's platform and stored in the environment variable `OPENAI_API_KEY`.
 
 
 Upload all the JSON files to the vector using using `file_batches.upload_and_poll` method. This method will load the files in batches and poll the status of the upload. The files will be processed in parallel, and the embeddings will be generated for each data element. 
+
 
 ```python
 def upload_json_files_to_vector_store(vector_store_name, json_dir):
@@ -86,10 +88,11 @@ def upload_json_files_to_vector_store(vector_store_name, json_dir):
     client.vector_stores.file_batches.upload_and_poll(
       vector_store_id=vector_store.id, files=files
     )
+
 ```    
 
 
-> 	Note: The default chunking strategy for `file_search` uses a chunk size of 800 tokens with a 400-token overlap. You can override this behavior by specifying a custom chunking_strategy. [Learn more](https://platform.openai.com/docs/assistants/tools/file-search#customizing-file-search-settings).
+> 💡 The default chunking strategy for `file_search` uses a chunk size of 800 tokens with a 400-token overlap. You can override this behavior by specifying a custom chunking_strategy. [Learn more](https://platform.openai.com/docs/assistants/tools/file-search#customizing-file-search-settings).
 
 
 To improve the performance of augmented context, we can add attribution to each file uploaded to the vector store. This can be used to filter the files based on the domain. For example, if you are interested in the `Claims` domain, you can add a `domain` field to each file uploaded to the vector store. This will help in filtering the files based on the domain when querying the vector store.
@@ -127,7 +130,7 @@ Find top 3 most relevant source data element that maps to the target table / col
 }
 ```  
 
-> Note: This basic prompt can be improved considerably by adding more contextual information covered in the final section.
+
 
 ### Retrieve Relevant Data Elements
 Use OpenAI's file search tool to retrieve relevant data elements from the vector store. The search will be based on the target table name, column name, and description. The search results will include the most relevant data elements from the T-MSIS data dictionary.
