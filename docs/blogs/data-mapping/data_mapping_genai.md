@@ -4,7 +4,7 @@
 This article guides you through automating source-to-target data mappings for Medicaid's Transformed Medicaid Statistical Information System (T-MSIS) by leveraging OpenAI's new Response API and File Search tool within a Retrieval-Augmented Generation (RAG) framework. It includes detailed steps for data preparation, vector store creation and management, and effective query construction.
 
 ---
-## High Level architecture
+## 📌 High Level architecture
 ![Data Mapping](images/data_mapping.png)
 
 
@@ -192,7 +192,7 @@ def format_response(response):
 
 ---
 
-## Conclusion and Next Steps
+## 🚀 Conclusion and Next Steps
 
 This solution streamlines the generation of accurate source-to-target mappings, significantly reducing manual efforts and errors. Potential enhancements include:
 
@@ -208,6 +208,18 @@ This solution streamlines the generation of accurate source-to-target mappings, 
 * If the target model is standardized and there is a large inventory of existing data mappings, it can be used to fine-tune the LLM model. The fine-tuned model will have a deeper understand of the target model and with a vector store of the source data, it can be used to generate the source to target mapping with a higher accuracy.
 
 
+We welcome your feedback and suggestions for future topics!
+
+---
+
+## 🤝 Partner With Us
+
+Looking to build similar RAG-based automation or other intelligent data engineering solutions for your organization?
+
+[**Beesbridge**](https://beesbridge.us/) specializes in modernizing data platforms, automating pipelines, and leveraging cutting-edge AI to streamline operations.
+
+[Contact us](mailto:admin@beesbridge.us) to explore how we can help you unlock the full potential of your data.
+
 ---
 
 ## 📚 References
@@ -216,7 +228,4 @@ This solution streamlines the generation of accurate source-to-target mappings, 
 - [Retrieval Augmented Generation and Semantic Search for GPTs](https://help.openai.com/en/articles/8868588-retrieval-augmented-generation-rag-and-semantic-search-for-gpts)
 - [OpenAI File Search Tool Docs](https://platform.openai.com/docs/guides/file-search)
  - [Customizing File Search Settings](https://platform.openai.com/docs/assistants/tools/file-search/customizing-file-search-settings)
- 8868588-retrieval-augmented-generation-rag-and-semantic-search-for-gpts)
 
-
-This article will be a part of a series of articles on how to use OpenAI's API for data engineering tasks. This first article focused on the T-MSIS data mapping task. We invite readers to share their experiences and suggestions for future articles.
